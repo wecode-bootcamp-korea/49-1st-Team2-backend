@@ -3,15 +3,27 @@
 ## Directory tree
 
 ```bash
-├── app.js
+── app.js
+├── controllers
+│   └── index.js
+├── db
+│   ├── migrations
+│   └── schema.sql
+├── middlewares
+│   └── index.js
 ├── models
-│ └── index.js
+│   └── index.js
 ├── package-lock.json
 ├── package.json
 ├── pull_request_template.md
 ├── readme.md
+├── routes
+│   └── index.js
+├── services
+│   └── index.js
 └── utils
-└── throwError.js
+    └── throwError.js
+
 ```
 
 ## Error handler
