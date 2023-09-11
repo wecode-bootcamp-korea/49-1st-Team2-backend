@@ -14,11 +14,13 @@ exports.loginController = async (req, res, next) => {
     const userCheck = await isEmailValid(email, next);
     if (!userCheck) throwError(401, 'not found email');
 
+    res.status(200).json({ message: 'login success' });
+
     // 비밀번호 체크
     const passwordCheck = userCheck[0].password;
     if (password !== passwordCheck) throwError(401, 'invalid password');
 
-    bcrypt.compare(password, passwordCheck, (err, result) => {
+    await bcrypt.compare(password, passwordCheck, (err, result) => {
       if (err) {
         throwError(401, 'invalid password');
       } else if (result === true) {
