@@ -14,3 +14,18 @@ exports.getVerificationCodeService = async (email, next) => {
     next(err);
   }
 };
+
+exports.setNewPasswordService = async (id, password, next) => {
+  try {
+    await dataSource.query(
+      `
+    UPDATE users SET password = ? WHERE user_id = ? 
+    `,
+      [password, id],
+    );
+    return 'password updated';
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
