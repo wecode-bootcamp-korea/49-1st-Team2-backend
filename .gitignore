@@ -256,4 +256,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# dbmate 스키마 파일 추가 안함 
+schema.sql
+
 # End of https://www.toptal.com/developers/gitignore/api/vim,node,visualstudiocode,macos,dotenv,linux,windows
