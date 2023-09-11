@@ -1,5 +1,21 @@
 # Team 2
 
+## Directory tree
+
+```bash
+├── app.js
+├── models
+│ └── index.js
+├── package-lock.json
+├── package.json
+├── pull_request_template.md
+├── readme.md
+└── utils
+└── throwError.js
+```
+
+## Error handler
+
 ```js
 // app.js
 app.use((err, _, res, next) => {
