@@ -10,8 +10,8 @@ exports.createThreadService = async (id, content, next) => {
     );
     if (nickname && nickname.nickname) {
       await dataSource.query(
-        `INSERT INTO threads (title, content, user_id) VALUES (?, ?, ?)`,
-        ['title', content, id],
+        `INSERT INTO threads (content, user_id) VALUES (?, ?)`,
+        [content, id],
       );
       const [created_at] = await dataSource.query(
         `SELECT created_at FROM threads WHERE content = ?`,
