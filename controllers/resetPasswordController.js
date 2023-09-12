@@ -18,18 +18,20 @@ const transporter = nodemailer.createTransport({
 
 exports.getVerificationCodeController = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email, redirect_uri } = req.body;
     const id = await getVerificationCodeService(email, next);
     if (!id) throwError(401, "user doesn't exist");
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
       to: email,
       subject: `weread 비밀번호 초기화 링크입니다.`,
-      text: `<a href="${
-        process.env.CLIENT_URI
-      }/users/reset-password?token=${jwt.sign(id, process.env.JWT_SECRET, {
-        expiresIn: '5m',
-      })}">weread 비밀번호 초기화 링크입니다.</a> 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
+      text: `<a href="${redirect_uri}/users/reset-password?token=${jwt.sign(
+        id,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '5m',
+        },
+      )}">weread 비밀번호 초기화 링크입니다.</a> 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
