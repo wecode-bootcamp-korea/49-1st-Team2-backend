@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const {
   getVerificationCodeService,
@@ -19,7 +20,6 @@ exports.getVerificationCodeController = async (req, res, next) => {
   try {
     const { email } = req.body;
     const id = await getVerificationCodeService(email, next);
-
     if (!id) throwError(401, "user doesn't exist");
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
@@ -46,6 +46,7 @@ exports.getVerificationCodeController = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.setNewPasswordController = async (req, res, next) => {
   try {
     const { id } = req.user;
@@ -53,9 +54,8 @@ exports.setNewPasswordController = async (req, res, next) => {
     if (!password) throwError(400, 'key error');
     const passwordRegExp = /[ !@#$%^&*(),.?":{}|<>]/g;
     if (isValidData(passwordRegExp, password)) {
-      res
-        .status(201)
-        .json({ message: setNewPasswordService(id, password, next) });
+      const hash = await bcrypt.hash(password, 12);
+      res.status(201).json({ message: setNewPasswordService(id, hash, next) });
     }
     console.log(id);
   } catch (err) {
