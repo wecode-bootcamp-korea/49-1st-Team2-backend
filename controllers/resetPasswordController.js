@@ -58,7 +58,9 @@ exports.setNewPasswordController = async (req, res, next) => {
     const passwordRegExp = /[ !@#$%^&*(),.?":{}|<>]/g;
     if (isValidData(passwordRegExp, password)) {
       const hash = await bcrypt.hash(password, 12);
-      res.status(201).json({ message: setNewPasswordService(id, hash, next) });
+      res
+        .status(201)
+        .json({ message: await setNewPasswordService(id, hash, next) });
     }
     console.log(id);
   } catch (err) {
