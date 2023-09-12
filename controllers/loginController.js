@@ -29,5 +29,6 @@ exports.loginController = async (req, res, next) => {
     throwError(401, 'invalid password');
   } catch (err) {
     console.log(err);
+    next(err);
   }
 };
