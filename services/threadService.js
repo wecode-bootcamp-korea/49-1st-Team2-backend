@@ -35,7 +35,8 @@ exports.viewThreadService = async (res, next) => {
     const viewThread = await dataSource.query(
       `
       SELECT threads.id, users.nickname, users.profile_image, threads.content, threads.created_at
-      FROM threads, users;
+      FROM threads, users
+      WHERE users.id = threads.user_id;
       `,
     );
     return res.status(200).json({
