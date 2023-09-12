@@ -14,23 +14,18 @@ exports.loginController = async (req, res, next) => {
     const userCheck = await isEmailValid(email, next);
     if (!userCheck) throwError(401, 'not found email');
 
-    res.status(200).json({ message: 'login success' });
-
     // 비밀번호 체크
     const passwordCheck = userCheck[0].password;
-    if (password !== passwordCheck) throwError(401, 'invalid password');
-
-    await bcrypt.compare(password, passwordCheck, (err, result) => {
-      if (err) {
-        throwError(401, 'invalid password');
-      } else if (result === true) {
-        const userId = userCheck[0].id;
-        tokenGeneration(userId);
-        if (!tokenGeneration) throwError(401, 'token generation failure');
-        res.header('Authorization', `Bearer ${tokenGeneration}`);
-        res.status(200).json({ message: 'login success' });
-      }
-    });
+    const result = await bcrypt.compare(password, passwordCheck);
+    if (result) {
+      const userId = userCheck[0].id;
+      if (!tokenGeneration(userId)) throwError(401, 'token generation failure');
+      return res.status(200).json({
+        message: 'login success',
+        token: `${tokenGeneration(userId)}`,
+      });
+    }
+    throwError(401, 'invalid password');
   } catch (err) {
     console.log(err);
   }
