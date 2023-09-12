@@ -1,7 +1,6 @@
 -- migrate:up
 CREATE TABLE `threads` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(20) NOT NULL,
   `content` text NOT NULL,
   `user_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
