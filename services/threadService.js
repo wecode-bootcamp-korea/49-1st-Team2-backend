@@ -29,3 +29,20 @@ exports.createThreadService = async (id, content, next) => {
     next(err);
   }
 };
+
+exports.viewThreadService = async (res, next) => {
+  try {
+    const viewThread = await dataSource.query(
+      `
+      SELECT threads.id, users.nickname, users.profile_image, threads.content, threads.created_at
+      FROM threads, users;
+      `,
+    );
+    return res.status(200).json({
+      data: viewThread,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
