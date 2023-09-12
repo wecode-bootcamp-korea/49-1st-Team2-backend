@@ -46,6 +46,5 @@ const signUpController = async (req, res) => {
   }
 };
 
-module.exports = {
-  signUpController,
-};
+module.exports = signUpController
+
