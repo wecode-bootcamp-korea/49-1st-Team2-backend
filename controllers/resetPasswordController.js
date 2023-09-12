@@ -19,6 +19,7 @@ const transporter = nodemailer.createTransport({
 exports.getVerificationCodeController = async (req, res, next) => {
   try {
     const { email, redirect_uri } = req.body;
+    if (!email || redirect_uri) throwError(400, 'key error');
     const id = await getVerificationCodeService(email, next);
     if (!id) throwError(401, "user doesn't exist");
     const mailOptions = {
