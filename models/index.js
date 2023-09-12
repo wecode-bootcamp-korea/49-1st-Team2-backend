@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { DataSource } = require('typeorm');
 exports.dataSource = new DataSource({
   type: process.env.TYPEORM_CONNECTION,

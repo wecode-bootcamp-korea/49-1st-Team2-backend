@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const { dataSource } = require('./models');
+
+const userRouter = require('./routes');
 require('dotenv').config();
 
 const app = express();
@@ -20,6 +22,7 @@ dataSource
     console.error(err);
   });
 
+app.use(userRouter);
 app.use((req, _, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;
