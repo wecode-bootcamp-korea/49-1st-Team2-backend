@@ -19,7 +19,7 @@ exports.setNewPasswordService = async (id, password, next) => {
   try {
     await dataSource.query(
       `
-    UPDATE users SET password = ? WHERE user_id = ? 
+    UPDATE users SET password = ? WHERE id = ? 
     `,
       [password, id],
     );
