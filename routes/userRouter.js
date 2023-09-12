@@ -4,7 +4,7 @@ const {
   setNewPasswordController,
 } = require('../controllers/resetPasswordController');
 const { verifyToken } = require('../middlewares');
-const {signUpController} = require('../controllers/signUpController');
+const { signUpController } = require('../controllers/signUpController');
 
 const router = express.Router();
 const { loginController } = require('../controllers/loginController');

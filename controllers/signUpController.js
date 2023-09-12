@@ -1,6 +1,7 @@
-const createUser = require('../services/signUpService');
+const { createUser } = require('../services/signUpService');
+const { throwError } = require('../utils/throwError');
 
-const signUpController = async (req, res) => {
+exports.signUpController = async (req, res) => {
   try {
     const {
       name,
@@ -12,20 +13,13 @@ const signUpController = async (req, res) => {
       birthday,
     } = req.body;
 
-    if (!name || !email || !password) {
-      //falsy 값
-      const err = new Error('KEY_ERROR');
-      err.statusCode = 400;
-      err.message = 'KEY_ERROR';
-      throw err;
-    }
+    //필수 값 확인 - falsy 사용
+    if (!name || !email || !password) throwError(400, "missing name, email or password");
 
+    // 비밀번호 확인에 필요한 정규식
     const pwValidation = /.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\|-].*/;
-    if (!pwValidation.test(password)) {
-      const err = new Error('PASSWORD_IS_NOT_VALID');
-      err.statusCode = 409;
-      throw err;
-    }
+
+    if (!pwValidation.test(password)) throwError(409, "Password must contain Special Character")
     await createUser(
       name,
       email,
@@ -35,7 +29,6 @@ const signUpController = async (req, res) => {
       phoneNumber,
       birthday,
     );
-
     return res.status(201).json({
       message: 'SIGNUP_SUCCESS',
     });
@@ -45,6 +38,3 @@ const signUpController = async (req, res) => {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
-
-module.exports = signUpController
-

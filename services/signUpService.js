@@ -1,6 +1,7 @@
 const { dataSource } = require('../models');
+const { throwError } = require('../utils/throwError');
 
-const createUser = async (name, email, password, profileImage, nickname, phoneNumber, birthday) => {
+exports.createUser = async (name, email, password, profileImage, nickname, phoneNumber, birthday) => {
   try {
     return await dataSource.query(
     `INSERT INTO users(
@@ -21,10 +22,3 @@ const createUser = async (name, email, password, profileImage, nickname, phoneNu
     throw error;
   }
 };
-
-module.exports = {
-createUser
-}
-
-
-
