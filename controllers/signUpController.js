@@ -1,4 +1,4 @@
-const userService = require('../services/userService');
+const signUpService = require('../services/signUpService');
 
 const signUp = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
     throw err
     };
 
-    await userService.signUp( name, email, password, profileImage, nickname, phoneNumber, birthday );
+    await signUpService.signUp( name, email, password, profileImage, nickname, phoneNumber, birthday );
     return res.status(201).json({
       message: 'SIGNUP_SUCCESS',
     });
