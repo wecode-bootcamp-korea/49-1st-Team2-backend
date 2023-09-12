@@ -1,21 +1,13 @@
 const { dataSource } = require('../models');
-const { throwError } = require('../utils/throwError');
 
-exports.createUser = async (name, email, password, profileImage, nickname, phoneNumber, birthday) => {
+exports.createUser = async (nickname, email, password, profileImage, phoneNumber, birthday) => {
   try {
-    return await dataSource.query(
-    `INSERT INTO users(
-      name,
-      email,
-      password
-      profile_image,
-      nickname,
-      phone_number,
-      birthday
-    ) VALUES (?, ?, ?, ?, ?, ?, ?);
+    const userCredential = dataSource.query(
+    `INSERT INTO users(nickname, email, password, profile_image, phone_number, birth_day) VALUES (?, ?, ?, ?, ?, ?);
     `,
-    [name, email, password, profileImage, nickname, phoneNumber,birthday]
+    [nickname, email, password, profileImage, phoneNumber, birthday]
     );
+
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 500;
