@@ -6,7 +6,10 @@ const {
   dupliCheckEmail,
   dupliCheckNickname,
 } = require('./userService');
-const { createThreadService } = require('./threadService');
+const {
+  createThreadService,
+  getUserThreadService,
+} = require('./threadService');
 
 module.exports = {
   userService: {
@@ -19,5 +22,6 @@ module.exports = {
   },
   threadService: {
     createThreadService,
+    getUserThreadService,
   },
 };
