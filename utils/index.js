@@ -1,3 +1,18 @@
+const jwt = require('jsonwebtoken');
+
+exports.tokenGeneration = (userId) => {
+  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET);
+  return token;
+};
+/**
+ * isValidData
+ * @param {string | RegExp} reg - 정규 표현식
+ * @param {string} validationTarget - 검증할 문자열
+ * @returns
+ */
+exports.isValidData = (reg, validationTarget) => {
+  return reg.test(validationTarget);
+};
 /**
  * throwError
  * @param {number} code - 에러 상태 코드

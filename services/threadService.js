@@ -1,6 +1,7 @@
 const { dataSource } = require('../models');
-const { throwError } = require('../utils/throwError');
-exports.createThreadService = async (id, content, next) => {
+const { throwError } = require('../utils');
+
+const createThreadService = async (id, content, next) => {
   try {
     const [nickname] = await dataSource.query(
       `
@@ -30,20 +31,6 @@ exports.createThreadService = async (id, content, next) => {
   }
 };
 
-exports.viewThreadService = async (res, next) => {
-  try {
-    const viewThread = await dataSource.query(
-      `
-      SELECT threads.id, users.nickname, users.profile_image, threads.content, threads.created_at
-      FROM threads, users
-      WHERE users.id = threads.user_id;
-      `,
-    );
-    return res.status(200).json({
-      data: viewThread,
-    });
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
+module.exports = {
+  createThreadService,
 };
