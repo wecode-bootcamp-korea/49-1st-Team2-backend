@@ -76,12 +76,13 @@ const loginController = async (req, res, next) => {
       return res.status(200).json({
         message: 'login success',
         token: `${tokenGeneration(userId)}`,
-        nickname: userCheck[0].nickname,
+        id: userId,
       });
     }
     throwError(401, 'invalid password');
   } catch (err) {
     console.log(err);
+    next(err);
   }
 };
 
