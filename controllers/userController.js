@@ -76,7 +76,7 @@ const loginController = async (req, res, next) => {
 const getVerificationCodeController = async (req, res, next) => {
   try {
     const { email, redirect_uri } = req.body;
-    const id = await getVerificationCodeService(email, next);
+    const id = await getVerificationCodeService(email);
     if (!id) throwError(401, "user doesn't exist");
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -89,13 +89,13 @@ const getVerificationCodeController = async (req, res, next) => {
       from: process.env.NODE_MAILER_USER,
       to: email,
       subject: `weread 비밀번호 초기화 링크입니다.`,
-      text: `<a href="${redirect_uri}/users/reset-password?token=${jwt.sign(
+      html: `<span style="color:blue">${redirect_uri}?token=${jwt.sign(
         id,
         process.env.JWT_SECRET,
         {
           expiresIn: '5m',
         },
-      )}">weread 비밀번호 초기화 링크입니다.</a> 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
+      )}</span> 👈 weread 비밀번호 초기화 링크입니다. 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -121,7 +121,7 @@ const setNewPasswordController = async (req, res, next) => {
     const passwordRegExp = /[ !@#$%^&*(),.?":{}|<>]/g;
     if (isValidData(passwordRegExp, password)) {
       const hash = await bcrypt.hash(password, 12);
-      res.status(201).json({ message: setNewPasswordService(id, hash, next) });
+      res.status(201).json({ message: setNewPasswordService(id, hash) });
     }
     console.log(id);
   } catch (err) {
