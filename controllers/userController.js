@@ -114,11 +114,13 @@ const loginController = async (req, res, next) => {
     const result = await bcrypt.compare(password, passwordCheck);
     if (result) {
       const userId = userCheck[0].id;
+      const userNickname = userCheck[0].nickname;
       if (!tokenGeneration(userId)) throwError(401, 'token generation failure');
       return res.status(200).json({
         message: 'login success',
         token: `${tokenGeneration(userId)}`,
         id: userId,
+        nickname: userNickname,
       });
     }
     throwError(401, 'invalid password');
