@@ -14,10 +14,41 @@ const createUser = async (
     `,
       [nickname, email, password, profileImage, phoneNumber, birthday],
     );
+    return userCredential
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
     throw error;
+  }
+};
+
+const dupliCheckEmail = async (email, next) => {
+  try {
+      const checkVal = dataSource.query(
+        `
+        SELECT email FROM users WHERE email = ?
+        `,
+        [email],
+        );
+        return checkVal.length
+    } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+const dupliCheckNickname = async (nickname, next) => {
+  try {
+      const checkVal = dataSource.query(
+        `
+        SELECT nickname FROM users WHERE nickname = ?
+        `,
+        [nickname],
+        );
+        return checkVal.length
+    } catch (err) {
+    console.error(err);
+    next(err);
   }
 };
 
@@ -70,4 +101,6 @@ module.exports = {
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
+  dupliCheckEmail,
+  dupliCheckNickname
 };

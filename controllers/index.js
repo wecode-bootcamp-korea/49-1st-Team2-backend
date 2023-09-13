@@ -3,6 +3,7 @@ const {
     getVerificationCodeController,
     setNewPasswordController,
     loginController,
+    dupliCheckController,
   } = require('./userController');
   const { createThreadController } = require('./threadController');
   
@@ -12,6 +13,7 @@ const {
       getVerificationCodeController,
       setNewPasswordController,
       loginController,
+      dupliCheckController,
     },
     threadControllers: {
       createThreadController,

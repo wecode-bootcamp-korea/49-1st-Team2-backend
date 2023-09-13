@@ -10,6 +10,8 @@ const {
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
+  dupliCheckEmail,
+  dupliCheckNickname,
 } = userServices;
 
 const signUpController = async (req, res) => {
@@ -72,6 +74,31 @@ const signUpController = async (req, res) => {
   }
 };
 
+const dupliCheckController = async (req, res) => {
+  //바디에, 이메일이 있으면, 엘스이프 닉네임.
+  try {
+    const { email, nickname } = req.body;
+    if (email) {
+      const check = await dupliCheckEmail(email)
+      if (check > 0) {
+        return res.status(400).json({message : "Email is Already in Use"})
+      } else {
+        return res.status(200).json({message : "Email can be Used"})
+      }
+    } else if (nickname) {
+      const check = await dupliCheckNickname(nickname)
+      if (check > 0) {
+        return res.status(400).json({message : "Nickname is Already in Use"})
+    } else {
+      return res.status(200).json({message : "Nickname can be used"})
+    }
+  };
+  } catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 400).json({ message: err.message });
+  }
+};
+
 const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -79,21 +106,19 @@ const loginController = async (req, res, next) => {
     if (!email || !password) throwError(403, 'email invalid');
     // 이메일 체크
     const userCheck = await isEmailValid(email, next);
-    console.log(userCheck)
+    console.log(userCheck);
     if (!userCheck) throwError(401, 'not found email');
-    
+
     // 비밀번호 체크
     const passwordCheck = userCheck[0].password;
     const result = await bcrypt.compare(password, passwordCheck);
     if (result) {
       const userId = userCheck[0].id;
-      const nickName = userCheck[0].nickname;
       if (!tokenGeneration(userId)) throwError(401, 'token generation failure');
       return res.status(200).json({
         message: 'login success',
         token: `${tokenGeneration(userId)}`,
         id: userId,
-        nickName : nickName
       });
     }
     throwError(401, 'invalid password');
@@ -165,4 +190,5 @@ module.exports = {
   loginController,
   getVerificationCodeController,
   setNewPasswordController,
+  dupliCheckController,
 };
