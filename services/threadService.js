@@ -1,6 +1,7 @@
 const { dataSource } = require('../models');
-const { throwError } = require('../utils/throwError');
-exports.createThreadService = async (id, content, next) => {
+const { throwError } = require('../utils');
+
+const createThreadService = async (id, content, next) => {
   try {
     const [nickname] = await dataSource.query(
       `
@@ -28,4 +29,8 @@ exports.createThreadService = async (id, content, next) => {
     console.error(err);
     next(err);
   }
+};
+
+module.exports = {
+  createThreadService,
 };

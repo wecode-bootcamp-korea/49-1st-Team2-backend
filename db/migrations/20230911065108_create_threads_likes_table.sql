@@ -1,6 +1,6 @@
 -- migrate:up
 CREATE TABLE `threads_likes` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `thread_id` int NOT NULL,
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
