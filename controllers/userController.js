@@ -4,7 +4,7 @@ const { tokenGeneration, isValidData, throwError } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { userServices } = require('../services');
+const { userService } = require('../services');
 const {
   createUser,
   getVerificationCodeService,
@@ -12,7 +12,7 @@ const {
   isEmailValid,
   dupliCheckEmail,
   dupliCheckNickname,
-} = userServices;
+} = userService;
 
 const signUpController = async (req, res) => {
   try {
@@ -79,20 +79,20 @@ const dupliCheckController = async (req, res) => {
   try {
     const { email, nickname } = req.body;
     if (email) {
-      const check = await dupliCheckEmail(email)
+      const check = await dupliCheckEmail(email);
       if (check > 0) {
-        return res.status(400).json({message : "Email is Already in Use"})
+        return res.status(400).json({ message: 'Email is Already in Use' });
       } else {
-        return res.status(200).json({message : "Email can be Used"})
+        return res.status(200).json({ message: 'Email can be Used' });
       }
     } else if (nickname) {
-      const check = await dupliCheckNickname(nickname)
+      const check = await dupliCheckNickname(nickname);
       if (check > 0) {
-        return res.status(400).json({message : "Nickname is Already in Use"})
-    } else {
-      return res.status(200).json({message : "Nickname can be used"})
+        return res.status(400).json({ message: 'Nickname is Already in Use' });
+      } else {
+        return res.status(200).json({ message: 'Nickname can be used' });
+      }
     }
-  };
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 400).json({ message: err.message });
@@ -133,7 +133,8 @@ const loginController = async (req, res, next) => {
 const getVerificationCodeController = async (req, res, next) => {
   try {
     const { email, redirect_uri } = req.body;
-    const id = await getVerificationCodeService(email, next);
+    const id = await getVerificationCodeService(email);
+    console.log(id);
     if (!id) throwError(401, "user doesn't exist");
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -146,13 +147,13 @@ const getVerificationCodeController = async (req, res, next) => {
       from: process.env.NODE_MAILER_USER,
       to: email,
       subject: `weread 비밀번호 초기화 링크입니다.`,
-      text: `<a href="${redirect_uri}/users/reset-password?token=${jwt.sign(
+      html: `<span style="color:blue">${redirect_uri}?token=${jwt.sign(
         id,
         process.env.JWT_SECRET,
         {
           expiresIn: '5m',
         },
-      )}">weread 비밀번호 초기화 링크입니다.</a> 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
+      )}</span> 👈 weread 비밀번호 초기화 링크입니다. 인증 링크로 5분 내에 미이동시 링크가 만료됩니다.`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -178,7 +179,7 @@ const setNewPasswordController = async (req, res, next) => {
     const passwordRegExp = /[ !@#$%^&*(),.?":{}|<>]/g;
     if (isValidData(passwordRegExp, password)) {
       const hash = await bcrypt.hash(password, 12);
-      res.status(201).json({ message: setNewPasswordService(id, hash, next) });
+      res.status(201).json({ message: await setNewPasswordService(id, hash) });
     }
     console.log(id);
   } catch (err) {

@@ -1,5 +1,7 @@
 require('dotenv').config();
 const { DataSource } = require('typeorm');
+const { getVerificationCodeDao, setNewPasswordDao } = require('./userDao');
+
 exports.dataSource = new DataSource({
   type: process.env.TYPEORM_CONNECTION,
   host: process.env.TYPEORM_HOST,
@@ -8,3 +10,7 @@ exports.dataSource = new DataSource({
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
 });
+
+module.exports = {
+  userDao: { getVerificationCodeDao, setNewPasswordDao },
+};
