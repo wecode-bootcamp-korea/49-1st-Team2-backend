@@ -4,6 +4,9 @@ const { throwError } = require('../utils');
 
 const createThreadController = async (req, res, next) => {
   try {
+    console.log(req)
+    console.log(req.user)
+    console.log(req.body)
     const { id } = req.user;
     const { content } = req.body;
     if (!content) throwError(400, 'key error');
