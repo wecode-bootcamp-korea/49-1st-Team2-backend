@@ -34,24 +34,38 @@ const signUpController = async (req, res) => {
     if (!pwValidation.test(password))
       throwError(409, 'Password must contain Special Character');
 
-    if (!profileImage) {
-      const profileImage =
-        'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
-    }
-    //bcrypt
+    // bcrypt
     const hash = await bcrypt.hash(password, 12);
 
-    await createUser(
-      nickname,
-      email,
-      hash,
-      profileImage,
-      phoneNumber,
-      birthday,
-    );
-    return res.status(201).json({
-      message: 'SIGNUP_SUCCESS',
-    });
+    // 기본 프로파일 이미지 설정
+    if (!profileImage) {
+      const defaultProfileImage =
+        'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
+
+      await createUser(
+        nickname,
+        email,
+        hash,
+        defaultProfileImage,
+        phoneNumber,
+        birthday,
+      );
+      return res.status(201).json({
+        message: 'SIGNUP_SUCCESS',
+      });
+    } else {
+      await createUser(
+        nickname,
+        email,
+        hash,
+        profileImage,
+        phoneNumber,
+        birthday,
+      );
+      return res.status(201).json({
+        message: 'SIGNUP_SUCCESS',
+      });
+    }
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 400).json({ message: err.message });
@@ -65,18 +79,21 @@ const loginController = async (req, res, next) => {
     if (!email || !password) throwError(403, 'email invalid');
     // 이메일 체크
     const userCheck = await isEmailValid(email, next);
+    console.log(userCheck)
     if (!userCheck) throwError(401, 'not found email');
-
+    
     // 비밀번호 체크
     const passwordCheck = userCheck[0].password;
     const result = await bcrypt.compare(password, passwordCheck);
     if (result) {
       const userId = userCheck[0].id;
+      const nickName = userCheck[0].nickname;
       if (!tokenGeneration(userId)) throwError(401, 'token generation failure');
       return res.status(200).json({
         message: 'login success',
         token: `${tokenGeneration(userId)}`,
         id: userId,
+        nickName : nickName
       });
     }
     throwError(401, 'invalid password');
