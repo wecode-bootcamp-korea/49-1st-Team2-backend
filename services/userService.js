@@ -24,7 +24,7 @@ const createUser = async (
 
 const dupliCheckEmail = async (email, next) => {
   try {
-      const checkVal = dataSource.query(
+      const checkVal = await dataSource.query(
         `
         SELECT email FROM users WHERE email = ?
         `,
@@ -39,7 +39,7 @@ const dupliCheckEmail = async (email, next) => {
 
 const dupliCheckNickname = async (nickname, next) => {
   try {
-      const checkVal = dataSource.query(
+      const checkVal = await dataSource.query(
         `
         SELECT nickname FROM users WHERE nickname = ?
         `,
