@@ -1,4 +1,6 @@
 const { dataSource } = require('../models');
+const { userDao } = require('../models');
+const { getVerificationCodeDao, setNewPasswordDao } = userDao;
 
 const createUser = async (
   nickname,
@@ -66,23 +68,13 @@ const isEmailValid = async (email, next) => {
   }
 };
 
-const getVerificationCodeService = async (email) => {
-  const [id] = await dataSource.query(
-    `
-    SELECT id FROM users WHERE email = ?
-    `,
-    [email],
-  );
+const getVerificationCodeService = (email) => {
+  const id = getVerificationCodeDao(email);
   return id;
 };
 
-const setNewPasswordService = async (id, password) => {
-  await dataSource.query(
-    `
-  UPDATE users SET password = ? WHERE id = ? 
-  `,
-    [password, id],
-  );
+const setNewPasswordService = (id, password) => {
+  setNewPasswordDao(id, password);
   return 'password updated';
 };
 

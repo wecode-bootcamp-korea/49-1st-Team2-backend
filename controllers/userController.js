@@ -4,7 +4,7 @@ const { tokenGeneration, isValidData, throwError } = require('../utils');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { userServices } = require('../services');
+const { userService } = require('../services');
 const {
   createUser,
   getVerificationCodeService,
@@ -12,7 +12,7 @@ const {
   isEmailValid,
   dupliCheckEmail,
   dupliCheckNickname,
-} = userServices;
+} = userService;
 
 const signUpController = async (req, res) => {
   try {
@@ -79,20 +79,20 @@ const dupliCheckController = async (req, res) => {
   try {
     const { email, nickname } = req.body;
     if (email) {
-      const check = await dupliCheckEmail(email)
+      const check = await dupliCheckEmail(email);
       if (check > 0) {
-        return res.status(400).json({message : "Email is Already in Use"})
+        return res.status(400).json({ message: 'Email is Already in Use' });
       } else {
-        return res.status(200).json({message : "Email can be Used"})
+        return res.status(200).json({ message: 'Email can be Used' });
       }
     } else if (nickname) {
-      const check = await dupliCheckNickname(nickname)
+      const check = await dupliCheckNickname(nickname);
       if (check > 0) {
-        return res.status(400).json({message : "Nickname is Already in Use"})
-    } else {
-      return res.status(200).json({message : "Nickname can be used"})
+        return res.status(400).json({ message: 'Nickname is Already in Use' });
+      } else {
+        return res.status(200).json({ message: 'Nickname can be used' });
+      }
     }
-  };
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 400).json({ message: err.message });
@@ -134,6 +134,7 @@ const getVerificationCodeController = async (req, res, next) => {
   try {
     const { email, redirect_uri } = req.body;
     const id = await getVerificationCodeService(email);
+    console.log(id);
     if (!id) throwError(401, "user doesn't exist");
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -178,7 +179,7 @@ const setNewPasswordController = async (req, res, next) => {
     const passwordRegExp = /[ !@#$%^&*(),.?":{}|<>]/g;
     if (isValidData(passwordRegExp, password)) {
       const hash = await bcrypt.hash(password, 12);
-      res.status(201).json({ message: setNewPasswordService(id, hash) });
+      res.status(201).json({ message: await setNewPasswordService(id, hash) });
     }
     console.log(id);
   } catch (err) {

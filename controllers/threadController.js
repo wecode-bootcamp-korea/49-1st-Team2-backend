@@ -1,5 +1,5 @@
-const { threadServices } = require('../services');
-const { createThreadService } = threadServices;
+const { threadService } = require('../services');
+const { createThreadService } = threadService;
 const { throwError } = require('../utils');
 
 const createThreadController = async (req, res, next) => {
