@@ -10,6 +10,8 @@ const {
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
+  dupliCheckEmail,
+  dupliCheckNickname,
 } = userServices;
 
 const signUpController = async (req, res) => {
@@ -21,25 +23,76 @@ const signUpController = async (req, res) => {
     if (!nickname || !email || !password)
       throwError(400, 'missing nickname, email or password');
 
+    // 이메일 형식 확인하는 정규식
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailPattern.test(email))
+      throwError(400, 'Please Check Your Email Address');
+
+    if (password.length < 10)
+      throwError(400, 'Password must be longer than 10 characters');
+
     // 비밀번호 확인에 필요한 정규식
     const pwValidation = /.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\|-].*/;
     if (!pwValidation.test(password))
       throwError(409, 'Password must contain Special Character');
 
-    //bcrypt
+    // bcrypt
     const hash = await bcrypt.hash(password, 12);
 
-    await createUser(
-      nickname,
-      email,
-      hash,
-      profileImage,
-      phoneNumber,
-      birthday,
-    );
-    return res.status(201).json({
-      message: 'SIGNUP_SUCCESS',
-    });
+    // 기본 프로파일 이미지 설정
+    if (!profileImage) {
+      const defaultProfileImage =
+        'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
+
+      await createUser(
+        nickname,
+        email,
+        hash,
+        defaultProfileImage,
+        phoneNumber,
+        birthday,
+      );
+      return res.status(201).json({
+        message: 'SIGNUP_SUCCESS',
+      });
+    } else {
+      await createUser(
+        nickname,
+        email,
+        hash,
+        profileImage,
+        phoneNumber,
+        birthday,
+      );
+      return res.status(201).json({
+        message: 'SIGNUP_SUCCESS',
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 400).json({ message: err.message });
+  }
+};
+
+const dupliCheckController = async (req, res) => {
+  //바디에, 이메일이 있으면, 엘스이프 닉네임.
+  try {
+    const { email, nickname } = req.body;
+    if (email) {
+      const check = await dupliCheckEmail(email)
+      if (check > 0) {
+        return res.status(400).json({message : "Email is Already in Use"})
+      } else {
+        return res.status(200).json({message : "Email can be Used"})
+      }
+    } else if (nickname) {
+      const check = await dupliCheckNickname(nickname)
+      if (check > 0) {
+        return res.status(400).json({message : "Nickname is Already in Use"})
+    } else {
+      return res.status(200).json({message : "Nickname can be used"})
+    }
+  };
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 400).json({ message: err.message });
@@ -53,6 +106,7 @@ const loginController = async (req, res, next) => {
     if (!email || !password) throwError(403, 'email invalid');
     // 이메일 체크
     const userCheck = await isEmailValid(email, next);
+    console.log(userCheck);
     if (!userCheck) throwError(401, 'not found email');
 
     // 비밀번호 체크
@@ -60,16 +114,19 @@ const loginController = async (req, res, next) => {
     const result = await bcrypt.compare(password, passwordCheck);
     if (result) {
       const userId = userCheck[0].id;
+      const userNickname = userCheck[0].nickname;
       if (!tokenGeneration(userId)) throwError(401, 'token generation failure');
       return res.status(200).json({
         message: 'login success',
         token: `${tokenGeneration(userId)}`,
-        nickname: userCheck[0].nickname,
+        id: userId,
+        nickname: userNickname,
       });
     }
     throwError(401, 'invalid password');
   } catch (err) {
     console.log(err);
+    next(err);
   }
 };
 
@@ -135,4 +192,5 @@ module.exports = {
   loginController,
   getVerificationCodeController,
   setNewPasswordController,
+  dupliCheckController,
 };

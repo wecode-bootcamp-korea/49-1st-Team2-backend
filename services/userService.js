@@ -14,10 +14,55 @@ const createUser = async (
     `,
       [nickname, email, password, profileImage, phoneNumber, birthday],
     );
+    return userCredential;
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
     throw error;
+  }
+};
+
+const dupliCheckEmail = async (email, next) => {
+  try {
+    const checkVal = await dataSource.query(
+      `
+        SELECT email FROM users WHERE email = ?
+        `,
+      [email],
+    );
+    return checkVal.length;
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+const dupliCheckNickname = async (nickname, next) => {
+  try {
+    const checkVal = await dataSource.query(
+      `
+        SELECT nickname FROM users WHERE nickname = ?
+        `,
+      [nickname],
+    );
+    return checkVal.length;
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+const isEmailValid = async (email, next) => {
+  try {
+    const emailCheck = await dataSource.query(`
+      SELECT id, email, password, nickname
+      FROM users
+      WHERE email = '${email}';
+      `);
+    return emailCheck;
+  } catch (err) {
+    console.log(err);
+    next(err);
   }
 };
 
@@ -41,23 +86,11 @@ const setNewPasswordService = async (id, password) => {
   return 'password updated';
 };
 
-const isEmailValid = async (email, next) => {
-  try {
-    const emailCheck = await dataSource.query(`
-      SELECT id, email, password, nickname
-      FROM users
-      WHERE email = '${email}';
-      `);
-    return emailCheck;
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
-};
-
 module.exports = {
   createUser,
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
+  dupliCheckEmail,
+  dupliCheckNickname,
 };

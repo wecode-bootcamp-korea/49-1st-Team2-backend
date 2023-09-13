@@ -3,6 +3,8 @@ const {
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
+  dupliCheckEmail,
+  dupliCheckNickname
 } = require('./userService');
 const { createThreadService } = require('./threadService');
 
@@ -12,6 +14,8 @@ module.exports = {
     getVerificationCodeService,
     setNewPasswordService,
     isEmailValid,
+    dupliCheckEmail,
+    dupliCheckNickname
   },
   threadServices: {
     createThreadService,
