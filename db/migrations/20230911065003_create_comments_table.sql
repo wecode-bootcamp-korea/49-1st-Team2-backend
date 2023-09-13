@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE `comments` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL,
+  `comment` text NOT NULL,
   `user_id` int NOT NULL,
   `thread_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
