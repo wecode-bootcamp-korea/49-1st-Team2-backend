@@ -1,7 +1,6 @@
 const { commentServices } = require('../services');
 const { createCommentService } = commentServices;
 const { throwError } = require('../utils')
-const { tokenGeneration, isValidData, throwError } = require('../utils');
 
 const createCommentController = async (req, res, next) => {
     try {

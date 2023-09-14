@@ -14,5 +14,4 @@ router.post('/', verifyToken, createThreadController);
 router.patch('/', verifyToken, updateThreadController);
 router.delete('/', verifyToken, deleteThreadController);
 
-
 module.exports = router;
