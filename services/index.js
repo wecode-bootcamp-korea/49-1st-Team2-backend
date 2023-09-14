@@ -7,6 +7,7 @@ const {
   dupliCheckNickname,
 } = require('./userService');
 const {
+  viewThreadService,
   createThreadService,
   updateThreadService,
   deleteThreadService,
@@ -22,6 +23,7 @@ module.exports = {
     dupliCheckNickname,
   },
   threadService: {
+    viewThreadService,
     createThreadService,
     updateThreadService,
     deleteThreadService,
