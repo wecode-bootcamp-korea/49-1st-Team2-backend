@@ -1,13 +1,11 @@
-const { dataSource } = require('../models');
 const { throwError } = require('../utils');
 const { commentDao } = require('../models');
 const { createCommentDao, updateCommentDao, deleteCommentDao} = commentDao;
 
-const createCommentService = async () => {
-    createCommentDao()
-    return { message : "comment created",
-...nickname,
-...}
+const createCommentService = async (id, body) => {
+    createCommentDao(id, body)
+    return "comment created";
+    //추가작성 필요
 };
 const updateCommentService = async (id, body) => {
     updateCommentDao(id, body);
