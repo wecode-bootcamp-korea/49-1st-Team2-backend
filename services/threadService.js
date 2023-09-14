@@ -1,5 +1,4 @@
 const { dataSource } = require('../models');
-const { getUserThreadServiceDao } = require('../models/threadDao');
 const { throwError } = require('../utils');
 
 const createThreadService = async (id, content) => {
@@ -26,11 +25,7 @@ const createThreadService = async (id, content) => {
   }
   throwError(400, "user doesn't exist");
 };
-const getUserThreadService = (threadId) => {
-  return getUserThreadServiceDao(threadId);
-};
 
 module.exports = {
   createThreadService,
-  getUserThreadService,
 };

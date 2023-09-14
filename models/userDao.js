@@ -8,6 +8,7 @@ const getVerificationCodeDao = async (email) => {
   );
   return id;
 };
+
 const setNewPasswordDao = async (id, password) => {
   await dataSource.query(
     `
