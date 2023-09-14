@@ -1,4 +1,4 @@
-const { dataSource } = require('../models');
+const { dataSource } = require('../models/dataSource');
 const { userDao } = require('../models');
 const { getVerificationCodeDao, setNewPasswordDao } = userDao;
 

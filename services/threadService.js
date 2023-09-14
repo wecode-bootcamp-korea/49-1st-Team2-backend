@@ -29,7 +29,6 @@ const createThreadService = async (id, content) => {
   throwError(400, "user doesn't exist");
 };
 
-
 const viewThreadService = async (id, next) => {
   try {
     let [viewThread] = await dataSource.query(
@@ -41,7 +40,7 @@ const viewThreadService = async (id, next) => {
 
     const viewThreadComment = await dataSource.query(
       `
-      SELECT threads.id, users.nickname, comments.content, comments.created_at, comments.user_id AS comment_user_id
+      SELECT threads.id, users.nickname, comments.comment, comments.created_at, comments.user_id AS comment_user_id
       FROM threads
       LEFT JOIN comments ON threads.id = comments.thread_id
       LEFT JOIN users ON comments.user_id = users.id
@@ -57,7 +56,7 @@ const viewThreadService = async (id, next) => {
         profileImage: viewThread.profile_image,
         isMyPost: id === viewThread.user_id,
         commentCount: viewThreadComment.length,
-        coments: viewThreadComment.map((data) => {
+        comments: viewThreadComment.map((data) => {
           return { ...data, isMyReply: data.comment_user_id === id };
         }),
         createdAt: viewThread.created_at,
@@ -83,5 +82,5 @@ module.exports = {
   viewThreadService,
   createThreadService,
   updateThreadService,
-  deleteThreadService
+  deleteThreadService,
 };
