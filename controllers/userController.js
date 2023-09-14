@@ -134,7 +134,6 @@ const getVerificationCodeController = async (req, res, next) => {
   try {
     const { email, redirect_uri } = req.body;
     const id = await getVerificationCodeService(email);
-    console.log(id);
     if (!id) throwError(401, "user doesn't exist");
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -181,7 +180,6 @@ const setNewPasswordController = async (req, res, next) => {
       const hash = await bcrypt.hash(password, 12);
       res.status(201).json({ message: await setNewPasswordService(id, hash) });
     }
-    console.log(id);
   } catch (err) {
     console.error(err);
     next(err);
