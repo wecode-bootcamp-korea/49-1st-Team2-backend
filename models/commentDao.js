@@ -1,20 +1,20 @@
 const { dataSource } = require('./dataSource');
 
-const createCommentDao = async (id, { content, threadId }) => {
+const createCommentDao = async (id, { comment, threadId }) => {
   await dataSource.query(
     `
-    INSERT INTO comments (content, user_id, thread_id) VALUES (?, ?, ?)
+    INSERT INTO comments (comment, user_id, thread_id) VALUES (?, ?, ?)
     `,
-    [content, id, threadId],
+    [comment, id, threadId],
   );
 };
 
-const updateCommentDao = async (id, { content, threadId }) => {
+const updateCommentDao = async (id, { comment, threadId }) => {
   await dataSource.query(
     `
-    UPDATE comments SET content = ? WHERE user_id = ? AND thread_id = ?
+    UPDATE comments SET comment = ? WHERE user_id = ? AND thread_id = ?
     `,
-    [content, id, threadId],
+    [comment, id, threadId],
   );
 };
 
