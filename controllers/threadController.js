@@ -1,6 +1,11 @@
 const { threadService } = require('../services');
-const { createThreadService, updateThreadService, deleteThreadService, viewThreadService } =
-  threadService;
+const {
+  createThreadService,
+  updateThreadService,
+  deleteThreadService,
+  viewThreadService,
+  getThreadByIdService,
+} = threadService;
 const { throwError } = require('../utils');
 
 const createThreadController = async (req, res, next) => {
@@ -16,13 +21,24 @@ const createThreadController = async (req, res, next) => {
   }
 };
 
-
 const viewThreadController = async (req, res, next) => {
   try {
     const { id } = req.user;
     return res.status(200).json(await viewThreadService(id, next));
   } catch (err) {
     console.log(err);
+    next(err);
+  }
+};
+
+const getThreadByIdController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { id: postId } = req.params;
+    console.log(await getThreadByIdService(id, postId));
+    return res.status(200).json(await getThreadByIdService(id, postId));
+  } catch (err) {
+    console.error(err);
     next(err);
   }
 };
@@ -61,4 +77,5 @@ module.exports = {
   updateThreadController,
   deleteThreadController,
   viewThreadController,
+  getThreadByIdController,
 };

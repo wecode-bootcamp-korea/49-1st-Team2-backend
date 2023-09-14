@@ -2,7 +2,8 @@ const { dataSource } = require('../models/dataSource');
 const dayjs = require('dayjs');
 const { throwError } = require('../utils');
 const { threadDao } = require('../models');
-const { updateThreadDao, deleteThreadDao, createThreadDao } = threadDao;
+const { updateThreadDao, deleteThreadDao, createThreadDao, getThreadByIdDao } =
+  threadDao;
 
 const createThreadService = async (id, content) => {
   const result = await createThreadDao(id, content);
@@ -69,6 +70,9 @@ const viewThreadService = async (id, next) => {
     next(err);
   }
 };
+const getThreadByIdService = (id, postId) => {
+  return getThreadByIdDao(id, postId);
+};
 
 const updateThreadService = (id, body) => {
   updateThreadDao(id, body);
@@ -85,4 +89,5 @@ module.exports = {
   createThreadService,
   updateThreadService,
   deleteThreadService,
+  getThreadByIdService,
 };

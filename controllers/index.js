@@ -10,12 +10,13 @@ const {
   viewThreadController,
   updateThreadController,
   deleteThreadController,
+  getThreadByIdController,
 } = require('./threadController');
 const {
   createCommentController,
   updateCommentController,
   deleteCommentController,
-} = require('./commentController')
+} = require('./commentController');
 
 module.exports = {
   userController: {
@@ -30,10 +31,11 @@ module.exports = {
     viewThreadController,
     updateThreadController,
     deleteThreadController,
+    getThreadByIdController,
   },
   commentController: {
     createCommentController,
     updateCommentController,
     deleteCommentController,
-  }
+  },
 };

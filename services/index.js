@@ -11,6 +11,7 @@ const {
   createThreadService,
   updateThreadService,
   deleteThreadService,
+  getThreadByIdService,
 } = require('./threadService');
 const {
   createCommentService,
@@ -32,6 +33,7 @@ module.exports = {
     createThreadService,
     updateThreadService,
     deleteThreadService,
+    getThreadByIdService,
   },
   commentService: {
     createCommentService,

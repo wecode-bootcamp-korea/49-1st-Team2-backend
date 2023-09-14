@@ -1,11 +1,9 @@
-const {
-  getVerificationCodeDao,
-  setNewPasswordDao,
-} = require('./userDao');
+const { getVerificationCodeDao, setNewPasswordDao } = require('./userDao');
 const {
   updateThreadDao,
   deleteThreadDao,
   createThreadDao,
+  getThreadByIdDao,
 } = require('./threadDao');
 const {
   createCommentDao,
@@ -22,6 +20,7 @@ module.exports = {
     updateThreadDao,
     deleteThreadDao,
     createThreadDao,
+    getThreadByIdDao,
   },
   commentDao: {
     createCommentDao,
