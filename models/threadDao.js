@@ -9,6 +9,14 @@ const updateThreadDao = async (id, { content, postId }) => {
   );
 };
 
+const deleteThreadDao = async (id, postId) => {
+  await dataSource.query(
+    `DELETE FROM threads WHERE user_id  = ? AND threads.id = ?`,
+    [id, postId],
+  );
+};
+
 module.exports = {
   updateThreadDao,
+  deleteThreadDao,
 };

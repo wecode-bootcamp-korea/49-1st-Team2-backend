@@ -1,5 +1,6 @@
 const { threadService } = require('../services');
-const { createThreadService, updateThreadService } = threadService;
+const { createThreadService, updateThreadService, deleteThreadService } =
+  threadService;
 const { throwError } = require('../utils');
 
 const createThreadController = async (req, res, next) => {
@@ -29,7 +30,22 @@ const updateThreadController = async (req, res, next) => {
     next(err);
   }
 };
+
+const deleteThreadController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { postId } = req.body;
+    if (!postId) throwError(400, 'key error');
+    return res
+      .status(200)
+      .json({ message: await deleteThreadService(id, postId) });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
 module.exports = {
   createThreadController,
   updateThreadController,
+  deleteThreadController,
 };
