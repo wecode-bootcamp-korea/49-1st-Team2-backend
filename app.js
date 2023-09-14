@@ -21,10 +21,7 @@ app.use((req, _, next) => {
 });
 
 app.use((err, _, res, next) => {
-  res.status(err.status || 500);
-  return res.json({
-    error: `${err.status ? err.status : ''} ${err.message}`,
-  });
+  return res.status(err.status || 500).json({ error: err.message });
 });
 
 app.listen(app.get('port'), () => {

@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/login', loginController);
 
-router.post('/reset-password', getVerificationCodeController);
+router.post('/reset-password', userController.getVerificationCodeController);
 router.post('/new-password', verifyToken, setNewPasswordController);
 router.post('/signup', signUpController);
 router.post('/checkduplicate', dupliCheckController);

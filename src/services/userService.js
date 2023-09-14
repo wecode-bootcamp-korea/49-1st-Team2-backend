@@ -1,5 +1,5 @@
-const { dataSource } = require('../models/dataSource');
-const { userDao } = require('../models');
+const { dataSource } = require('../../models/dataSource');
+const { userDao } = require('../../models');
 const { getVerificationCodeDao, setNewPasswordDao } = userDao;
 
 const createUser = async (
@@ -44,7 +44,7 @@ const dupliCheckNickname = async (nickname, next) => {
     const checkVal = await dataSource.query(
       `
         SELECT nickname FROM users WHERE nickname = ?
-        `,
+      `,
       [nickname],
     );
     return checkVal.length;
@@ -57,9 +57,15 @@ const dupliCheckNickname = async (nickname, next) => {
 const isEmailValid = async (email, next) => {
   try {
     const emailCheck = await dataSource.query(`
-      SELECT id, email, password, nickname
-      FROM users
-      WHERE email = '${email}';
+      SELECT
+        id,
+        email,
+        password,
+        nickname
+      FROM
+        users
+      WHERE
+        email = '${email}';
       `);
     return emailCheck;
   } catch (err) {

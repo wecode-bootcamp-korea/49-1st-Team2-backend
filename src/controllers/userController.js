@@ -16,12 +16,25 @@ const {
 
 const signUpController = async (req, res) => {
   try {
-    const { nickname, email, password, profileImage, phoneNumber, birthday } =
-      req.body;
-
+    const {
+      nickname,
+      email,
+      password,
+      profileImage = "",
+      phoneNumber,
+      birthday
+    } = req.body;
     //필수 값 확인 - falsy 사용
     if (!nickname || !email || !password)
       throwError(400, 'missing nickname, email or password');
+
+    const requiredKeys = { nickname, email, password }
+
+    Object.keys(requiredKeys).map((key) => {
+      if (!requiredKeys[key]) {
+        throwError(400, `KEY_ERROR: missing ${key}`)
+      }
+    })
 
     // 이메일 형식 확인하는 정규식
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -39,23 +52,10 @@ const signUpController = async (req, res) => {
     // bcrypt
     const hash = await bcrypt.hash(password, 12);
 
-    // 기본 프로파일 이미지 설정
-    if (!profileImage) {
-      const defaultProfileImage =
-        'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
+    const profile = profileImage ? profileImage : 'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
 
-      await createUser(
-        nickname,
-        email,
-        hash,
-        defaultProfileImage,
-        phoneNumber,
-        birthday,
-      );
-      return res.status(201).json({
-        message: 'SIGNUP_SUCCESS',
-      });
-    } else {
+
+    // 기본 프로파일 이미지 설정
       await createUser(
         nickname,
         email,
@@ -67,7 +67,6 @@ const signUpController = async (req, res) => {
       return res.status(201).json({
         message: 'SIGNUP_SUCCESS',
       });
-    }
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 400).json({ message: err.message });
