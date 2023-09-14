@@ -42,7 +42,7 @@ const signUpController = async (req, res) => {
     // 기본 프로파일 이미지 설정
     if (!profileImage) {
       const defaultProfileImage =
-        'https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff04d8ea9-3dd9-414b-b700-d298ec13121d%2Fwecode_symbol_b2x.png?table=block&id=a98c177b-5abd-45fc-aeee-d59612683b44&spaceId=4b97eaca-7938-4c43-b27c-a0c55795a841&width=250&userId=b9a7ee3f-f583-46d3-a09c-85f2f080696e&cache=v2';
+        'https://i.pinimg.com/736x/30/15/40/301540f163d1397c150d8a6955a1d92a.jpg';
 
       await createUser(
         nickname,
