@@ -5,11 +5,13 @@ const {
   viewThreadController,
   createThreadController,
   updateThreadController,
-  deleteThreadController
+  deleteThreadController,
+  getThreadByIdController,
 } = threadController;
 const router = express.Router();
 
 router.get('/', verifyToken, viewThreadController);
+router.get('/:id', verifyToken, getThreadByIdController);
 router.post('/', verifyToken, createThreadController);
 router.patch('/', verifyToken, updateThreadController);
 router.delete('/', verifyToken, deleteThreadController);
