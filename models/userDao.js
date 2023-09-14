@@ -1,4 +1,4 @@
-const { dataSource } = require('.');
+const { dataSource } = require('./dataSource');
 const getVerificationCodeDao = async (email) => {
   const [id] = await dataSource.query(
     `
