@@ -18,4 +18,6 @@ dataSource
     console.error(err);
   });
 
-module.exports = { dataSource };
+module.exports = {
+  dataSource,
+};
