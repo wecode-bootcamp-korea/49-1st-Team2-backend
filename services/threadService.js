@@ -32,7 +32,6 @@ const viewThreadService = async (id, next) => {
       LEFT JOIN users AS comment_users ON comments.user_id = comment_users.id
     `);
 
-    // Transform data to desired format
     const threadsMap = new Map();
     result.forEach((row) => {
       if (!threadsMap.has(row.id)) {
