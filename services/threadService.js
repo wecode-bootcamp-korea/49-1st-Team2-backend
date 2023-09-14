@@ -1,30 +1,12 @@
 const { dataSource } = require('../models/dataSource');
 const { throwError } = require('../utils');
 const { threadDao } = require('../models');
-const { deleteThreadDao } = require('../models/threadDao');
-const { updateThreadDao } = threadDao;
+const { updateThreadDao, deleteThreadDao, createThreadDao } = threadDao;
 
 const createThreadService = async (id, content) => {
-  const [nickname] = await dataSource.query(
-    `
-          SELECT nickname FROM users WHERE id = ?
-        `,
-    [id],
-  );
-  if (nickname && nickname.nickname) {
-    await dataSource.query(
-      `INSERT INTO threads (content, user_id) VALUES (?, ?)`,
-      [content, id],
-    );
-    const [created_at] = await dataSource.query(
-      `SELECT created_at FROM threads WHERE content = ?`,
-      [content],
-    );
-    return {
-      message: 'post created',
-      ...nickname,
-      ...created_at,
-    };
+  const result = await createThreadDao(id, content);
+  if (result && result.message === 'post created') {
+    return result;
   }
   throwError(400, "user doesn't exist");
 };
@@ -40,7 +22,7 @@ const viewThreadService = async (id, next) => {
 
     const viewThreadComment = await dataSource.query(
       `
-      SELECT threads.id, users.nickname, comments.comment, comments.created_at, comments.user_id AS comment_user_id
+      SELECT threads.id, users.nickname, comments.content, comments.created_at, comments.user_id AS comment_user_id
       FROM threads
       LEFT JOIN comments ON threads.id = comments.thread_id
       LEFT JOIN users ON comments.user_id = users.id
@@ -56,7 +38,7 @@ const viewThreadService = async (id, next) => {
         profileImage: viewThread.profile_image,
         isMyPost: id === viewThread.user_id,
         commentCount: viewThreadComment.length,
-        comments: viewThreadComment.map((data) => {
+        coments: viewThreadComment.map((data) => {
           return { ...data, isMyReply: data.comment_user_id === id };
         }),
         createdAt: viewThread.created_at,
