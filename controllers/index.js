@@ -5,10 +5,7 @@ const {
   loginController,
   dupliCheckController,
 } = require('./userController');
-const {
-  createThreadController,
-  getUserThreadController,
-} = require('./threadController');
+const { createThreadController } = require('./threadController');
 
 module.exports = {
   userController: {
@@ -20,6 +17,5 @@ module.exports = {
   },
   threadController: {
     createThreadController,
-    getUserThreadController,
   },
 };
