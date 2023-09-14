@@ -1,4 +1,4 @@
-const { dataSource } = require('../models');
+const { dataSource } = require('./dataSource');
 
 const createCommentDao = async (id, { content, threadId }) => {
   await dataSource.query(

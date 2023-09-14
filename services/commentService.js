@@ -16,7 +16,6 @@ const deleteCommentService = async (id, threadId) => {
     return "comment deleted";
 };
 
-
 module.exports = {
     createCommentService,
     updateCommentService,

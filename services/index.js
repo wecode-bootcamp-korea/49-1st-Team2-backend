@@ -12,6 +12,11 @@ const {
   updateThreadService,
   deleteThreadService,
 } = require('./threadService');
+const {
+  createCommentService,
+  updateCommentService,
+  deleteCommentService,
+} = require('./commentService');
 
 module.exports = {
   userService: {
@@ -27,5 +32,10 @@ module.exports = {
     createThreadService,
     updateThreadService,
     deleteThreadService,
+  },
+  commentService: {
+    createCommentService,
+    updateCommentService,
+    deleteCommentService,
   },
 };

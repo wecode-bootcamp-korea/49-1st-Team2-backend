@@ -1,6 +1,6 @@
-const { commentServices } = require('../services');
-const { createCommentService } = commentServices;
 const { throwError } = require('../utils')
+const { commentService } = require('../services');
+const { createCommentService, updateCommentService, deleteCommentService } = commentService;
 
 const createCommentController = async (req, res, next) => {
     try {
