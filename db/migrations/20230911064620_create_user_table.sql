@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nickname` varchar NOT NULL UNIQUE,
+  `nickname` varchar(255) NOT NULL UNIQUE,
   `email` varchar(50) NOT NULL UNIQUE,
   `password` varchar(500) NOT NULL,
   `profile_image` text NOT NULL,

@@ -4,20 +4,26 @@ const {
   setNewPasswordService,
   isEmailValid,
   dupliCheckEmail,
-  dupliCheckNickname
+  dupliCheckNickname,
 } = require('./userService');
-const { createThreadService } = require('./threadService');
+const {
+  createThreadService,
+  updateThreadService,
+  deleteThreadService,
+} = require('./threadService');
 
 module.exports = {
-  userServices: {
+  userService: {
     createUser,
     getVerificationCodeService,
     setNewPasswordService,
     isEmailValid,
     dupliCheckEmail,
-    dupliCheckNickname
+    dupliCheckNickname,
   },
-  threadServices: {
+  threadService: {
     createThreadService,
+    updateThreadService,
+    deleteThreadService,
   },
 };

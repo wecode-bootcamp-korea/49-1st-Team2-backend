@@ -1,4 +1,6 @@
 const { dataSource } = require('../models');
+const { userDao } = require('../models');
+const { getVerificationCodeDao, setNewPasswordDao } = userDao;
 
 const createUser = async (
   nickname,
@@ -14,7 +16,7 @@ const createUser = async (
     `,
       [nickname, email, password, profileImage, phoneNumber, birthday],
     );
-    return userCredential
+    return userCredential;
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
@@ -24,14 +26,14 @@ const createUser = async (
 
 const dupliCheckEmail = async (email, next) => {
   try {
-      const checkVal = await dataSource.query(
-        `
+    const checkVal = await dataSource.query(
+      `
         SELECT email FROM users WHERE email = ?
         `,
-        [email],
-        );
-        return checkVal.length
-    } catch (err) {
+      [email],
+    );
+    return checkVal.length;
+  } catch (err) {
     console.error(err);
     next(err);
   }
@@ -39,43 +41,13 @@ const dupliCheckEmail = async (email, next) => {
 
 const dupliCheckNickname = async (nickname, next) => {
   try {
-      const checkVal = await dataSource.query(
-        `
+    const checkVal = await dataSource.query(
+      `
         SELECT nickname FROM users WHERE nickname = ?
         `,
-        [nickname],
-        );
-        return checkVal.length
-    } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
-
-const getVerificationCodeService = async (email, next) => {
-  try {
-    const [id] = await dataSource.query(
-      `
-      SELECT id FROM users WHERE email = ?
-      `,
-      [email],
+      [nickname],
     );
-    return id;
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
-
-const setNewPasswordService = async (id, password, next) => {
-  try {
-    await dataSource.query(
-      `
-    UPDATE users SET password = ? WHERE id = ? 
-    `,
-      [password, id],
-    );
-    return 'password updated';
+    return checkVal.length;
   } catch (err) {
     console.error(err);
     next(err);
@@ -96,11 +68,21 @@ const isEmailValid = async (email, next) => {
   }
 };
 
+const getVerificationCodeService = (email) => {
+  const id = getVerificationCodeDao(email);
+  return id;
+};
+
+const setNewPasswordService = (id, password) => {
+  setNewPasswordDao(id, password);
+  return 'password updated';
+};
+
 module.exports = {
   createUser,
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
   dupliCheckEmail,
-  dupliCheckNickname
+  dupliCheckNickname,
 };
