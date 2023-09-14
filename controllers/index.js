@@ -8,6 +8,9 @@ const {
 const {
   createThreadController,
   viewThreadController,
+  updateThreadController,
+  deleteThreadController,
+
 } = require('./threadController');
 
 module.exports = {
@@ -21,5 +24,7 @@ module.exports = {
   threadController: {
     createThreadController,
     viewThreadController,
+    updateThreadController,
+    deleteThreadController,
   },
 };

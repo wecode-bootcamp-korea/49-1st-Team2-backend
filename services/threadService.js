@@ -1,5 +1,8 @@
 const { dataSource } = require('../models/dataSource');
 const { throwError } = require('../utils');
+const { threadDao } = require('../models');
+const { deleteThreadDao } = require('../models/threadDao');
+const { updateThreadDao } = threadDao;
 
 const createThreadService = async (id, content) => {
   const [nickname] = await dataSource.query(
@@ -25,6 +28,7 @@ const createThreadService = async (id, content) => {
   }
   throwError(400, "user doesn't exist");
 };
+
 
 const viewThreadService = async (id, next) => {
   try {
@@ -65,7 +69,19 @@ const viewThreadService = async (id, next) => {
   }
 };
 
+const updateThreadService = (id, body) => {
+  updateThreadDao(id, body);
+  return 'post updated';
+};
+
+const deleteThreadService = (id, postId) => {
+  deleteThreadDao(id, postId);
+  return 'post deleted';
+};
+
 module.exports = {
-  createThreadService,
   viewThreadService,
+  createThreadService,
+  updateThreadService,
+  deleteThreadService
 };

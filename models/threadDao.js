@@ -1,17 +1,22 @@
-const { dataSource } = require('.');
+const { dataSource } = require('./dataSource');
 
-const getUserThreadServiceDao = async (threadId) => {
-  const [data] = await dataSource.query(
-    `SELECT threads.id, users.nickname, users.profile_image, threads.content, threads.created_at
-        FROM threads
-        LEFT JOIN users ON threads.user_id = users.id 
-        WHERE threads.id = ?
-        `,
-    [threadId],
+const updateThreadDao = async (id, { content, postId }) => {
+  await dataSource.query(
+    `
+    UPDATE threads SET content = ? WHERE user_id  = ? AND threads.id = ?
+  `,
+    [content, id, postId],
   );
-  return data;
+};
+
+const deleteThreadDao = async (id, postId) => {
+  await dataSource.query(
+    `DELETE FROM threads WHERE user_id  = ? AND threads.id = ?`,
+    [id, postId],
+  );
 };
 
 module.exports = {
-  getUserThreadServiceDao,
+  updateThreadDao,
+  deleteThreadDao,
 };

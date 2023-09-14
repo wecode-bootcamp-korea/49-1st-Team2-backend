@@ -12,6 +12,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(userRouter);
 app.use((req, _, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
