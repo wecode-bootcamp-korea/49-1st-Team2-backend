@@ -4,8 +4,7 @@ const {
   dupliCheckNicknameService,
   getVerificationCodeService,
   setNewPasswordService,
-  isEmailValid,
-
+  loginService,
 } = require('./userService');
 const {
   viewThreadService,
@@ -27,7 +26,7 @@ module.exports = {
     dupliCheckNicknameService,
     getVerificationCodeService,
     setNewPasswordService,
-    isEmailValid,
+    loginService,
   },
   threadService: {
     viewThreadService,

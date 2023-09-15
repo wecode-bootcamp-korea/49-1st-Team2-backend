@@ -6,6 +6,7 @@ const {
   createUserDao,
   dupliCheckEmailDao,
   dupliCheckNicknameDao,
+  loginEmailCheckDao
 } = userDao;
 
 const createUserService = async (
@@ -50,18 +51,8 @@ const dupliCheckNicknameService = async (nickname, next) => {
   }
 };
 
-const isEmailValid = async (email, next) => {
-  try {
-    const emailCheck = await dataSource.query(`
-      SELECT id, email, password, nickname
-      FROM users
-      WHERE email = '${email}';
-      `);
-    return emailCheck;
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
+const loginService = async (email) => {
+  return await loginEmailCheckDao(email);
 };
 
 const getVerificationCodeService = (email) => {
@@ -80,5 +71,5 @@ module.exports = {
   dupliCheckNicknameService,
   getVerificationCodeService,
   setNewPasswordService,
-  isEmailValid,
+  loginService,
 };

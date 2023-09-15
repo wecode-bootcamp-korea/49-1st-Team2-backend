@@ -35,7 +35,6 @@ const getThreadByIdController = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { id: postId } = req.params;
-    console.log(await getThreadByIdService(id, postId));
     return res.status(200).json(await getThreadByIdService(id, postId));
   } catch (err) {
     console.error(err);

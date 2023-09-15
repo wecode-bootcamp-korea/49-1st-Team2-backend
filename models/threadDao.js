@@ -1,5 +1,4 @@
 const { dataSource } = require('./dataSource');
-const dayjs = require('dayjs');
 
 const createThreadDao = async (id, content) => {
   const [nickname] = await dataSource.query(
@@ -26,59 +25,59 @@ const createThreadDao = async (id, content) => {
 };
 
 const getThreadByIdDao = async (id, postId) => {
-  const result = await dataSource.query(
+  const [result] = await dataSource.query(
     `
-  SELECT 
-  threads.id, 
-  users.nickname, 
-  users.profile_image, 
-  threads.user_id, 
-  threads.content, 
-  threads.created_at,
-  comments.comment, 
-  comments.created_at AS comment_created_at, 
-  comments.user_id AS comment_user_id,
-  comment_users.nickname AS comment_nickname,
-  comment_users.profile_image AS comment_profile_image,
-  comments.id AS comment_id
-FROM threads
-LEFT JOIN users ON threads.user_id = users.id
-LEFT JOIN comments ON threads.id = comments.thread_id
-LEFT JOIN users AS comment_users ON comments.user_id = comment_users.id
-WHERE threads.id = ?
+    SELECT 
+    threads.id AS threadId,
+    users.nickname AS nickname,
+    users.profile_image AS profileImage,
+    threads.content AS content,
+    CASE 
+        WHEN threads.user_id = ? THEN true
+        ELSE false
+    END AS isMyPost,
+    DATE_FORMAT(threads.created_at, '%Y-%m-%d') AS createdAt,
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'id', comments.id,
+            'comment', comments.comment,
+            'createdAt', DATE_FORMAT(comments.created_at, '%Y-%m-%d'),
+            'isMyReply', CASE 
+                            WHEN comments.user_id = ? THEN true
+                            ELSE false
+                         END,
+            'nickname', cu.nickname,
+            'profileImage', cu.profile_image
+        )
+    ) AS comments
+FROM
+    threads
+JOIN 
+    users ON threads.user_id = users.id
+LEFT JOIN 
+    comments ON threads.id = comments.thread_id
+LEFT JOIN 
+    users AS cu ON comments.user_id = cu.id
+    WHERE threads.id = ?
+GROUP BY 
+    threads.id, users.id
   `,
-    [postId],
+    [id, id, postId],
   );
-  const threadsMap = new Map();
-  result.forEach((row) => {
-    const threadDate = dayjs(row.created_at);
-    const commentDate = dayjs(row.comment_created_at);
-
-    if (!threadsMap.has(row.id)) {
-      threadsMap.set(row.id, {
-        id: row.id,
-        nickname: row.nickname,
-        profileImage: row.profile_image,
-        content: row.content,
-        isMyPost: id === row.user_id,
-        createdAt: threadDate.format('YYYY-MM-DD'),
-        comments: [],
-      });
-    }
-    if (row.comment) {
-      threadsMap.get(row.id).comments.push({
-        id: row.comment_id,
-        comment: row.comment,
-        createdAt: commentDate.format('YYYY-MM-DD'),
-        isMyReply: row.comment_user_id === id,
-        nickname: row.comment_nickname,
-        profileImage: row.comment_profile_image,
-      });
-    }
-  });
-
-  const [destructuredMapData] = Array.from(threadsMap.values());
-  return { data: destructuredMapData };
+  const filteredComments = result.comments.filter((data) => data.id);
+  const { threadId, nickname, profileImage, content, isMyPost, createdAt } =
+    result;
+  return {
+    data: {
+      threadId,
+      nickname,
+      profileImage,
+      content,
+      isMyPost,
+      createdAt,
+      comments: filteredComments,
+    },
+  };
 };
 
 const updateThreadDao = async (id, { content, postId }) => {
