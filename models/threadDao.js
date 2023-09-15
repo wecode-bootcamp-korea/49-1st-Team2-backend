@@ -38,8 +38,8 @@ const getThreadByIdDao = async (id, postId) => {
   comments.comment, 
   comments.created_at AS comment_created_at, 
   comments.user_id AS comment_user_id,
-  users.nickname AS comment_nickname,
-  users.profile_image AS comment_profile_image,
+  comment_users.nickname AS comment_nickname,
+  comment_users.profile_image AS comment_profile_image,
   comments.id AS comment_id
 FROM threads
 LEFT JOIN users ON threads.user_id = users.id
