@@ -110,7 +110,9 @@ const loginController = async (req, res, next) => {
     if (!userCheck) throwError(401, 'not found email');
 
     // 비밀번호 체크
+    console.log(userCheck)
     const passwordCheck = userCheck[0].password;
+    console.log("dsa : " +passwordCheck)
     const result = await bcrypt.compare(password, passwordCheck);
     if (result) {
       const userId = userCheck[0].id;

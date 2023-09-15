@@ -1,29 +1,29 @@
 const { dataSource } = require('./dataSource');
 
-const createCommentDao = async (id, { content, threadId }) => {
+const createCommentDao = async (userId, { comment, threadId }) => {
   await dataSource.query(
     `
-    INSERT INTO comments (content, user_id, thread_id) VALUES (?, ?, ?)
+    INSERT INTO comments (comment, user_id, thread_id) VALUES (?, ?, ?)
     `,
-    [content, id, threadId],
+    [comment, userId, threadId],
   );
 };
 
-const updateCommentDao = async (id, { content, threadId }) => {
+const updateCommentDao = async (userId, { comment, commentId }) => {
   await dataSource.query(
     `
-    UPDATE comments SET content = ? WHERE user_id = ? AND thread_id = ?
+    UPDATE comments SET comment = ? WHERE user_id = ? AND id = ?
     `,
-    [content, id, threadId],
+    [comment, userId, commentId],
   );
 };
 
-const deleteCommentDao = async (id, threadId) => {
+const deleteCommentDao = async (userId, commentId) => {
   await dataSource.query(
     `
-    DELETE FROM comments WHERE user_id = ? AND thread_id = ?
+    DELETE FROM comments WHERE user_id = ? AND id = ?
     `,
-    [id, threadId],
+    [userId, commentId],
   );
 };
 

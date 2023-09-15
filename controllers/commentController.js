@@ -5,9 +5,11 @@ const { createCommentService, updateCommentService, deleteCommentService } = com
 const createCommentController = async (req, res, next) => {
     try {
         const { id } = req.user;
-        const { content, threadId } = req.body;
-        if (!content) throwError(400, 'NO_CONTENT');
-        return res.status(201).json(await createCommentService(id, content, threadId))
+        const { comment, threadId } = req.body;
+        console.log("controller 코멘트: ", comment)
+        console.log("controller threadId: ", threadId)
+        if (!comment) throwError(400, 'NO_COMMENT');
+        return res.status(201).json(await createCommentService(id, { comment, threadId }))
     } catch (err) {
         console.error(err);
         next(err);
@@ -17,8 +19,8 @@ const createCommentController = async (req, res, next) => {
 const updateCommentController = async (req, res, next) => {
     try {
         const { id } = req.user;
-        const { content, commentId } = req.body;
-        if (!content || !commentId) throwError(400, 'key error');
+        const { comment, commentId } = req.body;
+        if (!comment || !commentId) throwError(400, 'key error');
         return res.status(201).json({message : await updateCommentService(id, req.body)})
     } catch (err) {
         console.error(err);
