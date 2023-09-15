@@ -1,10 +1,10 @@
 const {
-  createUser,
+  createUserService,
+  dupliCheckEmailService,
+  dupliCheckNicknameService,
   getVerificationCodeService,
   setNewPasswordService,
   loginService,
-  dupliCheckEmail,
-  dupliCheckNickname,
 } = require('./userService');
 const {
   viewThreadService,
@@ -21,12 +21,12 @@ const {
 
 module.exports = {
   userService: {
-    createUser,
+    createUserService,
+    dupliCheckEmailService,
+    dupliCheckNicknameService,
     getVerificationCodeService,
     setNewPasswordService,
     loginService,
-    dupliCheckEmail,
-    dupliCheckNickname,
   },
   threadService: {
     viewThreadService,

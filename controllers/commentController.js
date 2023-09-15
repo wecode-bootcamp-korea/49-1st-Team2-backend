@@ -6,8 +6,6 @@ const createCommentController = async (req, res, next) => {
     try {
         const { id } = req.user;
         const { comment, threadId } = req.body;
-        console.log("controller 코멘트: ", comment)
-        console.log("controller threadId: ", threadId)
         if (!comment) throwError(400, 'NO_COMMENT');
         return res.status(201).json(await createCommentService(id, { comment, threadId }))
     } catch (err) {
