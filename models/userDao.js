@@ -18,7 +18,20 @@ const setNewPasswordDao = async (id, password) => {
   );
 };
 
+const loginEmailCheckDao = async (email) => {
+  const emailCheck = await dataSource.query(
+    `
+    SELECT id, email, password, nickname
+    FROM users
+    WHERE email = ?;
+  `,
+    [email],
+  );
+  return emailCheck;
+};
+
 module.exports = {
   getVerificationCodeDao,
   setNewPasswordDao,
+  loginEmailCheckDao,
 };

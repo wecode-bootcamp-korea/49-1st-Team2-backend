@@ -2,7 +2,7 @@ const {
   createUser,
   getVerificationCodeService,
   setNewPasswordService,
-  isEmailValid,
+  loginService,
   dupliCheckEmail,
   dupliCheckNickname,
 } = require('./userService');
@@ -24,7 +24,7 @@ module.exports = {
     createUser,
     getVerificationCodeService,
     setNewPasswordService,
-    isEmailValid,
+    loginService,
     dupliCheckEmail,
     dupliCheckNickname,
   },
