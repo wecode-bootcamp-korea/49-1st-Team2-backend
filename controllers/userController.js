@@ -9,7 +9,7 @@ const {
   createUserService,
   getVerificationCodeService,
   setNewPasswordService,
-  isEmailValid,
+  loginService,
   dupliCheckEmailService,
   dupliCheckNicknameService,
 } = userService;
