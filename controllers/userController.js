@@ -6,12 +6,12 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const { userService } = require('../services');
 const {
-  createUser,
+  createUserService,
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
-  dupliCheckEmail,
-  dupliCheckNickname,
+  dupliCheckEmailService,
+  dupliCheckNicknameService,
 } = userService;
 
 const signUpController = async (req, res) => {
@@ -44,7 +44,7 @@ const signUpController = async (req, res) => {
       const defaultProfileImage =
         'https://i.pinimg.com/736x/30/15/40/301540f163d1397c150d8a6955a1d92a.jpg';
 
-      await createUser(
+      await createUserService(
         nickname,
         email,
         hash,
@@ -56,7 +56,7 @@ const signUpController = async (req, res) => {
         message: 'SIGNUP_SUCCESS',
       });
     } else {
-      await createUser(
+      await createUserService(
         nickname,
         email,
         hash,
@@ -79,14 +79,14 @@ const dupliCheckController = async (req, res) => {
   try {
     const { email, nickname } = req.body;
     if (email) {
-      const check = await dupliCheckEmail(email);
+      const check = await dupliCheckEmailService(email);
       if (check > 0) {
         return res.status(400).json({ message: 'Email is Already in Use' });
       } else {
         return res.status(200).json({ message: 'Email can be Used' });
       }
     } else if (nickname) {
-      const check = await dupliCheckNickname(nickname);
+      const check = await dupliCheckNicknameService(nickname);
       if (check > 0) {
         return res.status(400).json({ message: 'Nickname is Already in Use' });
       } else {

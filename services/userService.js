@@ -1,8 +1,14 @@
 const { dataSource } = require('../models/dataSource');
 const { userDao } = require('../models');
-const { getVerificationCodeDao, setNewPasswordDao } = userDao;
+const {
+  getVerificationCodeDao,
+  setNewPasswordDao,
+  createUserDao,
+  dupliCheckEmailDao,
+  dupliCheckNicknameDao,
+} = userDao;
 
-const createUser = async (
+const createUserService = async (
   nickname,
   email,
   password,
@@ -11,12 +17,14 @@ const createUser = async (
   birthday,
 ) => {
   try {
-    const userCredential = dataSource.query(
-      `INSERT INTO users(nickname, email, password, profile_image, phone_number, birth_day) VALUES (?, ?, ?, ?, ?, ?);
-    `,
-      [nickname, email, password, profileImage, phoneNumber, birthday],
+    createUserDao(
+      nickname,
+      email,
+      password,
+      profileImage,
+      phoneNumber,
+      birthday,
     );
-    return userCredential;
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
@@ -24,30 +32,18 @@ const createUser = async (
   }
 };
 
-const dupliCheckEmail = async (email, next) => {
+const dupliCheckEmailService = async (email, next) => {
   try {
-    const checkVal = await dataSource.query(
-      `
-        SELECT email FROM users WHERE email = ?
-        `,
-      [email],
-    );
-    return checkVal.length;
+    dupliCheckEmailDao(email);
   } catch (err) {
     console.error(err);
     next(err);
   }
 };
 
-const dupliCheckNickname = async (nickname, next) => {
+const dupliCheckNicknameService = async (nickname, next) => {
   try {
-    const checkVal = await dataSource.query(
-      `
-        SELECT nickname FROM users WHERE nickname = ?
-        `,
-      [nickname],
-    );
-    return checkVal.length;
+    dupliCheckNicknameDao(nickname);
   } catch (err) {
     console.error(err);
     next(err);
@@ -79,10 +75,10 @@ const setNewPasswordService = (id, password) => {
 };
 
 module.exports = {
-  createUser,
+  createUserService,
+  dupliCheckEmailService,
+  dupliCheckNicknameService,
   getVerificationCodeService,
   setNewPasswordService,
   isEmailValid,
-  dupliCheckEmail,
-  dupliCheckNickname,
 };
