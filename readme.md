@@ -1,63 +1,77 @@
-# Team 2
+# Wereads
 
-## Directory tree
+wereads는 meta 사의 thread 서비스의 주요 기능을 직접 구현해보고 이해하는 프로젝트입니다.
+
+## Author 👥
+
+<table>
+  <tr>
+    <th>Author</th>
+    <th>Author</th>
+    <th>Author</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/B3lla0">고은채</a>
+    </td>
+    <td>
+      <a href="https://github.com/kroonstazy">이동훈</a>
+    </td>
+    <td>
+      <a href="https://github.com/03290419">이현진</a>
+    </td>
+  </tr>
+</table>
+
+
+## Skills 🛠️
+
+- `Express.js`
+- `TypeORM`
+- `JWT`
+- `bcrypt`
+- `nodemailer`
+
+
+## Directory tree 🌲
 
 ```bash
-── app.js
+├── app.js
 ├── controllers
-│   └── index.js
+│   ├── commentController.js
+│   ├── index.js
+│   ├── threadController.js
+│   └── userController.js
 ├── db
 │   ├── migrations
+│   │   ├── 20230911064620_create_user_table.sql
+│   │   ├── 20230911064804_create_threads_table.sql
+│   │   ├── 20230911065003_create_comments_table.sql
+│   │   └── 20230911065108_create_threads_likes_table.sql
 │   └── schema.sql
 ├── middlewares
 │   └── index.js
 ├── models
-│   └── index.js
+│   ├── commentDao.js
+│   ├── dataSource.js
+│   ├── index.js
+│   ├── threadDao.js
+│   └── userDao.js
 ├── package-lock.json
 ├── package.json
 ├── pull_request_template.md
 ├── readme.md
 ├── routes
-│   └── index.js
+│   ├── commentRouter.js
+│   ├── index.js
+│   ├── threadRouter.js
+│   └── userRouter.js
 ├── services
-│   └── index.js
+│   ├── commentService.js
+│   ├── index.js
+│   ├── threadService.js
+│   └── userService.js
 └── utils
-    └── throwError.js
+    └── index.js
 
-```
-
-## Error handler
-
-```js
-// app.js
-app.use((err, _, res, next) => {
-  res.status(err.status || 500);
-  return res.json({
-    error: `${err.status ? err.status : ''} ${err.message}`,
-  });
-});
-```
-
-에러 핸들링용 미들웨어로 `route.use` 메서드의 `catch` 에서 잡히는 모든 에러를 `catch`단에 `next(err)`를 호출함으로써 공통으로 처리할 수 있습니다.
-
-    예시
-
-```js
-app.delete('/posts', async (req, res, next) => {
-  try {
-    const { post_id } = req.body;
-    const { id } = req.query;
-    if (id) {
-      await dataSource.query(
-        `DELETE FROM posts WHERE posts.id=? AND posts.user_id=?`,
-        [post_id, id],
-      );
-      return res.status(200).json({ message: 'post deleted' });
-    }
-    throwError(401);
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
 ```
